@@ -1,56 +1,63 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from "react";
+import ReactDOM from "react-dom";
 
 const Header = (props) => {
-  return (
-    <h1>{props.header}</h1>
-  )
-}
+  return <h1>{props.header}</h1>;
+};
 
 const Part = (props) => {
   return (
     <p>
-      {props.part} {props.exercises}
+      {props.part.name} {props.part.exercises}
     </p>
-  )
-}
+  );
+};
 
 const Content = (props) => {
   return (
     <div>
-      <Part part={props.parts.part1} exercises={props.parts.exercises1}/>
-      <Part part={props.parts.part2} exercises={props.parts.exercises2}/>
-      <Part part={props.parts.part3} exercises={props.parts.exercises3}/>
+      <Part part={props.part1} />
+      <Part part={props.part2} />
+      <Part part={props.part3} />
     </div>
-  )
-}
+  );
+};
 
 const Total = (props) => {
   return (
     <p>
-      Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}
+      Number of exercises{" "}
+      {props.exercises1 + props.exercises2 + props.exercises3}
     </p>
-  )
-}
+  );
+};
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const parts = {
-   part1: 'Fundamentals of React',
-   exercises1: 10,
-   part2: 'Using props to pass data',
-   exercises2: 7,
-   part3: 'State of a component',
-   exercises3: 14
-  }
+  const course = "Half Stack application development";
+  const part1 = {
+    name: "Fundamentals of React",
+    exercises: 10,
+  };
+  const part2 = {
+    name: "Using props to pass data",
+    exercises: 7,
+  };
+  const part3 = {
+    name: "State of a component",
+    exercises: 14,
+  };
 
   return (
     <div>
       <Header header={course} />
-      <Content parts={parts} />
-      <Total exercises1={parts.exercises1} exercises2={parts.exercises2} exercises3={parts.exercises3}/>
+      <Content part1={part1} part2={part2} part3={part3} />
+      <Total
+        exercises1={part1.exercises}
+        exercises2={part2.exercises}
+        exercises3={part3.exercises}
+      />
     </div>
-  )
-}
+  );
+};
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(<App />, document.getElementById("root"));
