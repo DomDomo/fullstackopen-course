@@ -6,17 +6,27 @@ const App = ({ anecdotes }) => {
     return Math.floor(Math.random() * anecdotes.length);
   };
 
+  const startPoints = new Array(anecdotes.length).fill(0);
+
+  const [points, setPoints] = useState(startPoints);
   const [selected, setSelected] = useState(makeRandomInt());
 
-  const handleClick = () => {
+  const handleVoteClick = () => {
+    const copyPoints = { ...points };
+    copyPoints[selected] += 1;
+    setPoints(copyPoints);
+  };
+
+  const handleNextClick = () => {
     setSelected(makeRandomInt());
   };
 
   return (
     <div>
-      {anecdotes[selected]}
-      <br />
-      <button onClick={handleClick}>next anecdote</button>
+      <p>{anecdotes[selected]}</p>
+      <p>has {points[selected]} votes</p>
+      <button onClick={handleVoteClick}>vote</button>
+      <button onClick={handleNextClick}>next anecdote</button>
     </div>
   );
 };
