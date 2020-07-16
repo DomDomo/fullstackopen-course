@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
+const Header = ({ text }) => <h1>{text}</h1>;
+
 const App = ({ anecdotes }) => {
   const makeRandomInt = () => {
     return Math.floor(Math.random() * anecdotes.length);
@@ -21,12 +23,19 @@ const App = ({ anecdotes }) => {
     setSelected(makeRandomInt());
   };
 
+  const mostVotesIndex = Object.keys({ ...points }).reduce((a, b) =>
+    points[a] > points[b] ? a : b
+  );
+
   return (
     <div>
+      <Header text={"Anecdote of the day"} />
       <p>{anecdotes[selected]}</p>
       <p>has {points[selected]} votes</p>
       <button onClick={handleVoteClick}>vote</button>
       <button onClick={handleNextClick}>next anecdote</button>
+      <Header text={"Anecdote with the most votes"} />
+      <p>{anecdotes[mostVotesIndex]}</p>
     </div>
   );
 };
