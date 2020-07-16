@@ -14,6 +14,11 @@ const Statistic = (props) => (
 );
 
 const Statistics = (props) => {
+  const allFeedback = props.feedback.find(({ text }) => text === "all").value;
+  if (allFeedback === 0) {
+    return <div>No feedback given</div>;
+  }
+
   const components = [];
 
   props.feedback.forEach((statistic) => {
