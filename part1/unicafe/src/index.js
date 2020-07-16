@@ -7,6 +7,18 @@ const Button = (props) => (
   <button onClick={props.handleClick}>{props.text}</button>
 );
 
+const Buttons = (props) => {
+  const components = [];
+
+  props.buttons.forEach((button) => {
+    components.push(
+      <Button handleClick={button.handleClick} text={button.text} />
+    );
+  });
+
+  return <div>{components}</div>;
+};
+
 const Statistic = (props) => (
   <p>
     {props.text} {props.value}
@@ -48,6 +60,21 @@ const App = () => {
     setBad(bad + 1);
   };
 
+  const buttons = [
+    {
+      text: "good",
+      handleClick: handleGoodClick,
+    },
+    {
+      text: "neutral",
+      handleClick: handleNeutralClick,
+    },
+    {
+      text: "bad",
+      handleClick: handleBadClick,
+    },
+  ];
+
   const all = good + neutral + bad;
   const average = all ? (good - bad) / all : 0;
   const positive = `${all ? (good / all) * 100 : 0} %`;
@@ -82,9 +109,8 @@ const App = () => {
   return (
     <div>
       <Header text={"give feedback"} />
-      <Button handleClick={handleGoodClick} text="good" />
-      <Button handleClick={handleNeutralClick} text="neutral" />
-      <Button handleClick={handleBadClick} text="bad" />
+      <Buttons buttons={buttons} />
+
       <Header text={"statistics"} />
       <Statistics feedback={feedback} />
     </div>
