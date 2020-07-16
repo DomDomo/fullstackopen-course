@@ -20,9 +20,10 @@ const Buttons = (props) => {
 };
 
 const Statistic = (props) => (
-  <p>
-    {props.text} {props.value}
-  </p>
+  <tr>
+    <td>{props.text}</td>
+    <td>{props.value}</td>
+  </tr>
 );
 
 const Statistics = (props) => {
@@ -39,7 +40,11 @@ const Statistics = (props) => {
     );
   });
 
-  return <div>{components}</div>;
+  return (
+    <table>
+      <tbody>{components}</tbody>
+    </table>
+  );
 };
 
 const App = () => {
@@ -110,7 +115,6 @@ const App = () => {
     <div>
       <Header text={"give feedback"} />
       <Buttons buttons={buttons} />
-
       <Header text={"statistics"} />
       <Statistics feedback={feedback} />
     </div>
