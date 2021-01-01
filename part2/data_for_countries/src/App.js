@@ -6,28 +6,25 @@ const WEATHER_API_KEY = process.env.REACT_APP_API_KEY;
 const Weather = ({ country }) => {
   const [weather, setWeather] = useState({});
 
-  console.log(weather);
+  const apiUrl = `http://api.weatherstack.com/current?access_key=${WEATHER_API_KEY}&query=${country}`;
 
-  axios
-    .get(
-      `http://api.weatherstack.com/current?access_key=${WEATHER_API_KEY}&query=${country}`
-    )
-    .then((response) => {
-      console.log(response.data.current);
+  useEffect(() => {
+    axios.get(apiUrl).then((response) => {
       setWeather(response.data.current);
     });
+  }, [apiUrl]);
 
   if (!weather) {
     return <p>Loading....</p>;
   } else {
     return (
       <div>
-        <h2>Weather in {country.name}</h2>
+        <h2>Weather in {country}</h2>
         <p>
           <b>temperature: </b>
           {weather.temperature} Celcius
         </p>
-        <img src={weather.weather_icons} alt="" height="100"></img>
+        <img src={weather.weather_icons} alt="weather icon" height="100"></img>
         <p>
           <b>wind: </b>
           {weather.wind_speed} km/h direction {weather.wind_dir}
@@ -43,7 +40,7 @@ const OneCountry = ({ country }) => {
       <h1>{country.name}</h1>
       <p>capital {country.capital}</p>
       <p>populaton {country.population}</p>
-      <h2>languages</h2>
+      <h2>Spoken languages</h2>
       <ul>
         {country.languages.map((language, index) => (
           <li key={index}>{language.name}</li>
