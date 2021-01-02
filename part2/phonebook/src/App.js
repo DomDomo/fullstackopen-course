@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-const BASE_URL = "http://localhost:3001/persons";
+import personsService from './services/persons';
 
 const Filter = (props) => {
   return (
@@ -51,8 +49,10 @@ const App = () => {
   const [newSearch, setNewSearch] = useState("");
 
   useEffect(() => {
-    axios.get(BASE_URL).then((response) => {
-      setPersons(response.data);
+    personsService
+    .getAll()
+    .then(persons => {
+      setPersons(persons)
     });
   }, []);
 
@@ -84,10 +84,12 @@ const App = () => {
         name: newName,
         number: newNumber,
       }
-      axios
-      .post(BASE_URL, newPerson)
-      .then(response => {
-        setPersons(persons.concat(response.data));
+
+      personsService
+      .create(newPerson)
+      .then(createdPerson => {
+        console.log(createdPerson);
+        setPersons(persons.concat(createdPerson));
         setNewName("");
         setNewNumber("");
       })
