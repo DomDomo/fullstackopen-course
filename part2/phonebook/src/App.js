@@ -26,17 +26,15 @@ const PersonForm = (props) => {
   );
 };
 
-const Person = ({ person }) => (
-  <p>
-    {person.name} {person.number}
-  </p>
+const Person = (props) => (
+  <p>{props.person.name} {props.person.number} <button onClick={props.handlePersonDeletion}>delete</button></p>
 );
 
 const Persons = (props) => {
   return (
     <div>
       {props.people.map((person) => (
-        <Person key={person.name} person={person} />
+        <Person key={person.id} person={person} handlePersonDeletion={() => props.handlePersonDeletion(person)}/>
       ))}
     </div>
   );
@@ -68,6 +66,16 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
+  const handlePersonDeletion= (person) => {
+    if(!(window.confirm(`Delete ${person.name} ?`))) return;
+
+    personsService
+      .deletePerson(person.id)
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== person.id ));
+      })
+  };
+
   const addPerson = (event) => {
     event.preventDefault();
 
@@ -86,9 +94,8 @@ const App = () => {
       }
 
       personsService
-      .create(newPerson)
+      .createPerson(newPerson)
       .then(createdPerson => {
-        console.log(createdPerson);
         setPersons(persons.concat(createdPerson));
         setNewName("");
         setNewNumber("");
@@ -116,7 +123,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons people={peopleToShow} />
+      <Persons people={peopleToShow} handlePersonDeletion={handlePersonDeletion}/>
     </div>
   );
 };
