@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const BASE_URL = "http://localhost:3001/persons";
+
 const Filter = (props) => {
   return (
     <p>
@@ -49,7 +51,7 @@ const App = () => {
   const [newSearch, setNewSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
+    axios.get(BASE_URL).then((response) => {
       setPersons(response.data);
     });
   }, []);
@@ -75,15 +77,21 @@ const App = () => {
 
     if (duplicateName) {
       alert(`${newName} is already added to phonebook`);
-    } else {
-      setPersons(
-        persons.concat({
-          name: newName,
-          number: newNumber,
-        })
-      );
       setNewName("");
       setNewNumber("");
+    } else {
+      const newPerson = {
+        name: newName,
+        number: newNumber,
+      }
+      axios
+      .post(BASE_URL, newPerson)
+      .then(response => {
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+      })
+      
     }
   };
 
