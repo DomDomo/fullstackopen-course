@@ -80,6 +80,14 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
+  const addStateMessage = (message) => {
+    setStateMessage(message);
+
+    setTimeout(() => {
+      setStateMessage(null)
+    }, 5000)
+  }
+
   const deletePerson = (person) => {
     if(!(window.confirm(`Delete ${person.name} ?`))) return;
 
@@ -95,15 +103,18 @@ const App = () => {
         }
         addStateMessage(message);
       })
+      .catch(error => {
+        console.error(error);
+        const message = {
+          message: `Information of ${person.name} has already been removed from the server`,
+          type: "error"
+        }
+        addStateMessage(message);
+        setPersons(persons.filter(p => p.id !== person.id));
+      })
   };
 
-  const addStateMessage = (message) => {
-    setStateMessage(message);
-
-    setTimeout(() => {
-      setStateMessage(null)
-    }, 5000)
-  }
+  
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -135,6 +146,15 @@ const App = () => {
           type: "success"
         }
         addStateMessage(message);
+      })
+      .catch(error => {
+        console.error(error);
+        const message = {
+          message: `Information of ${person.name} has already been removed from the server`,
+          type: "error"
+        }
+        addStateMessage(message);
+        setPersons(persons.filter(p => p.id !== person.id));
       })
 
       
