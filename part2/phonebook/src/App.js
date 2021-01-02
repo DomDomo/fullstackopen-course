@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from "react";
 import personsService from './services/persons';
+import './index.css'
+
+const Notification = (props) => {
+  if (props.stateMessage === null) {
+    return null
+  }
+
+  return (
+    <div className={props.stateMessage.type}>
+      {props.stateMessage.message}
+    </div>
+  )
+}
 
 const Filter = (props) => {
   return (
@@ -27,14 +40,14 @@ const PersonForm = (props) => {
 };
 
 const Person = (props) => (
-  <p>{props.person.name} {props.person.number} <button onClick={props.handlePersonDeletion}>delete</button></p>
+  <p>{props.person.name} {props.person.number} <button onClick={props.deletePerson}>delete</button></p>
 );
 
 const Persons = (props) => {
   return (
     <div>
       {props.people.map((person) => (
-        <Person key={person.id} person={person} handlePersonDeletion={() => props.handlePersonDeletion(person)}/>
+        <Person key={person.id} person={person} deletePerson={() => props.deletePerson(person)}/>
       ))}
     </div>
   );
@@ -45,6 +58,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newSearch, setNewSearch] = useState("");
+  const [stateMessage, setStateMessage] = useState({});
 
   useEffect(() => {
     personsService
@@ -66,7 +80,7 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  const handlePersonDeletion= (person) => {
+  const deletePerson = (person) => {
     if(!(window.confirm(`Delete ${person.name} ?`))) return;
 
     personsService
@@ -74,9 +88,24 @@ const App = () => {
       .then(() => {
         setPersons(persons.filter(p => p.id !== person.id ));
       })
+      .then(() => {
+        const message = {
+          message: `Deleted ${newName}`,
+          type: "success"
+        }
+        addStateMessage(message);
+      })
   };
 
-  const addPerson = (event, person) => {
+  const addStateMessage = (message) => {
+    setStateMessage(message);
+
+    setTimeout(() => {
+      setStateMessage(null)
+    }, 5000)
+  }
+
+  const addPerson = (event) => {
     event.preventDefault();
 
     const duplicateName = persons
@@ -100,6 +129,13 @@ const App = () => {
       .then(returnedPerson => {
         setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
       })
+      .then(() => {
+        const message = {
+          message: `Updated ${newName}`,
+          type: "success"
+        }
+        addStateMessage(message);
+      })
 
       
     } else {
@@ -114,6 +150,12 @@ const App = () => {
         setPersons(persons.concat(createdPerson));
         setNewName("");
         setNewNumber("");
+      }).then(() => {
+        const message = {
+          message: `Added ${newName}`,
+          type: "success"
+        }
+        addStateMessage(message);
       })
       
     }
@@ -128,6 +170,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification stateMessage={stateMessage}/>
       <Filter value={newSearch} handleChange={handleSearchChange} />
       <h3>Add a new</h3>
       <PersonForm
@@ -138,7 +181,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons people={peopleToShow} handlePersonDeletion={handlePersonDeletion}/>
+      <Persons people={peopleToShow} deletePerson={deletePerson}/>
     </div>
   );
 };
