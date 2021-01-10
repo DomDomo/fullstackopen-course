@@ -64,13 +64,20 @@ const generateId = () => {
     return Math.floor(Math.random() * HIGH_NUMBER);
 }
 
-
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    if (!body.name) {
+    const duplicateName = persons
+      .map((person) => person.name)
+      .includes(body.name);
+
+    if(duplicateName){
         return response.status(400).json({ 
-        error: 'content missing' 
+            error: 'name must be unique' 
+        })
+    } else if (!body.name || !body.number) {
+        return response.status(400).json({ 
+        error: 'information missing' 
         })
     }
 
