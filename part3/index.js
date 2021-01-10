@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 
-let notes = [
+let persons = [
     {
         id: 1,
         name: "Arto Hellas",
@@ -28,8 +28,15 @@ app.get('/', (request, response) => {
     response.send('<h1>Welcom to the phonebook database</h1>')
 })
 
+app.get('/info', (request, response) => {
+    const serverTime = new Date()
+    const data = `<div>Phonebook has info for ${persons.length} people</div>
+    <div>${serverTime}</div>`
+    response.send(data)
+})
+
 app.get('/api/persons', (request, response) => {
-    response.json(notes)
+    response.json(persons)
 })
 
 
