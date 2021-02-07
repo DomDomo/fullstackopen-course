@@ -21,8 +21,8 @@ app.get('/info', (request, response, next) => {
     .then(peopleNum => {
         console.log(peopleNum);
         const serverTime = new Date()
-        const data = `<div>Phonebook has info for ${peopleNum} people</div>
-        <div>${serverTime}</div>`
+        const data = `<h1>Phonebook has info for ${peopleNum} people</h1>
+        <h2>${serverTime}</h2>`
         response.send(data)
     })
     .catch(error => next(error))
@@ -66,11 +66,24 @@ app.post('/api/persons', (request, response, next) => {
         name: body.name,
         number: body.number,
     })
-    
 
     person.save()
     .then(savedPerson => {
+        console.log(savedPerson)
         response.json(savedPerson)
+    })
+    .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    Person
+    .findOneAndUpdate(
+        {_id: request.params.id},
+        {number: request.body.number},
+        {returnOriginal: false}
+    )
+    .then((updatedPerson)=>{
+        response.json(updatedPerson)
     })
     .catch(error => next(error))
 })
@@ -84,8 +97,7 @@ const errorHandler = (error, request, response, next) => {
     console.error(error.message)
     if (error.name === 'CastError' && error.kind == 'ObjectId') {
         return response.status(400).send({ error: 'malformatted id' })
-    } 
-
+    }
     next(error)
 }
 app.use(errorHandler)

@@ -98,7 +98,7 @@ const App = () => {
       })
       .then(() => {
         const message = {
-          message: `Deleted ${newName}`,
+          message: `Deleted ${person.name}`,
           type: "success"
         }
         addStateMessage(message);
@@ -138,7 +138,9 @@ const App = () => {
       personsService
       .updatePerson(person.id, newPerson)
       .then(returnedPerson => {
-        setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
+        setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
+        setNewName("");
+        setNewNumber("");
       })
       .then(() => {
         const message = {
