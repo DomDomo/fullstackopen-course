@@ -88,19 +88,25 @@ app.put('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
-}
-app.use(unknownEndpoint)
-
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
     if (error.name === 'CastError' && error.kind == 'ObjectId') {
         return response.status(400).send({ error: 'malformatted id' })
     }
+    if (error.name === 'ValidationError') {
+        if(error.errors.name.properties.type = 'unique'){
+            return response.status(400).json({ error: "name is already taken" })
+        }
+        return response.status(400).json({ error: "incorrect inputs" })
+    }
     next(error)
 }
 app.use(errorHandler)
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
 
 
 const PORT = process.env.PORT
