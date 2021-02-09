@@ -19,7 +19,6 @@ app.get('/', (request, response) => {
 app.get('/info', (request, response, next) => {
     Person.countDocuments({})
     .then(peopleNum => {
-        console.log(peopleNum);
         const serverTime = new Date()
         const data = `<h1>Phonebook has info for ${peopleNum} people</h1>
         <h2>${serverTime}</h2>`
@@ -69,7 +68,6 @@ app.post('/api/persons', (request, response, next) => {
 
     person.save()
     .then(savedPerson => {
-        console.log(savedPerson)
         response.json(savedPerson)
     })
     .catch(error => next(error))
@@ -80,7 +78,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     .findOneAndUpdate(
         {_id: request.params.id},
         {number: request.body.number},
-        {returnOriginal: false}
+        {returnOriginal: false, runValidators: true}
     )
     .then((updatedPerson)=>{
         response.json(updatedPerson)
@@ -94,10 +92,7 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).send({ error: 'malformatted id' })
     }
     if (error.name === 'ValidationError') {
-        if(error.errors.name.properties.type = 'unique'){
-            return response.status(400).json({ error: "name is already taken" })
-        }
-        return response.status(400).json({ error: "incorrect inputs" })
+        return response.status(400).json({ error: error.message })
     }
     next(error)
 }

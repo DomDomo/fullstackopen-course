@@ -15,10 +15,12 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
+    minlength: [3,'Name must have atleast 3 characters'],
     required: true,
     unique: true,
   },
-  number: { 
+  number: {
+    minlength: [8,'Number must have atleast 8 characters'],
     type: String,
     required: true
   },

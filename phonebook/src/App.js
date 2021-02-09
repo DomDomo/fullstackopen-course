@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import personsService from './services/persons';
+import personService from './services/persons';
 import './index.css'
 
 const Notification = (props) => {
@@ -61,7 +61,7 @@ const App = () => {
   const [stateMessage, setStateMessage] = useState({});
 
   useEffect(() => {
-    personsService
+    personService
     .getAll()
     .then(persons => {
       setPersons(persons)
@@ -91,7 +91,7 @@ const App = () => {
   const deletePerson = (person) => {
     if(!(window.confirm(`Delete ${person.name} ?`))) return;
 
-    personsService
+    personService
       .deletePerson(person.id)
       .then(() => {
         setPersons(persons.filter(p => p.id !== person.id ));
@@ -135,7 +135,7 @@ const App = () => {
 
       const person = persons.find((p) => p.name === newName);
 
-      personsService
+      personService
       .updatePerson(person.id, newPerson)
       .then(returnedPerson => {
         setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
@@ -150,13 +150,11 @@ const App = () => {
         addStateMessage(message);
       })
       .catch(error => {
-        console.error(error);
         const message = {
-          message: `Information of ${person.name} has already been removed from the server`,
+          message: `${error.response.data.error}`,
           type: "error"
         }
         addStateMessage(message);
-        setPersons(persons.filter(p => p.id !== person.id));
       })
 
       
@@ -166,16 +164,24 @@ const App = () => {
         number: newNumber,
       }
 
-      personsService
+      personService
       .createPerson(newPerson)
       .then(createdPerson => {
         setPersons(persons.concat(createdPerson));
         setNewName("");
         setNewNumber("");
-      }).then(() => {
+      })
+      .then(() => {
         const message = {
           message: `Added ${newName}`,
           type: "success"
+        }
+        addStateMessage(message);
+      })
+      .catch(error => {
+        const message = {
+          message: `${error.response.data.error}`,
+          type: "error"
         }
         addStateMessage(message);
       })
