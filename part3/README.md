@@ -1,3 +1,3 @@
 # part3-phonebook-backend
 
-Backend: https://phonebook-persons-backend.herokuapp.com/
+Backend: https://phonebook-people-backend.herokuapp.com/
