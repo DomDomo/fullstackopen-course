@@ -20,6 +20,11 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, us
 app.use(cors())
 app.use(express.json())
 
+app.get('/', (request, response) => {
+    response.send('<h1>Welcom to the Blog list application</h1>')
+})
+  
+
 app.get('/api/blogs', (request, response) => {
   Blog
     .find({})
