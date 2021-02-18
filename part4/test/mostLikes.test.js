@@ -1,4 +1,4 @@
-const favoriteBlog = require('../utils/list_helper').favoriteBlog
+const mostLikes = require('../utils/list_helper').mostLikes
 
 const listWithOneBlog = [
     {
@@ -62,26 +62,24 @@ const listWithMultipleBlogs = [
     }  
 ]
 
-describe('favorite blog', () => {
+describe('author with the most likes', () => {
     test('of an empty list is an empty object', () => {
-        expect(favoriteBlog([])).toEqual({})
+        expect(mostLikes([])).toEqual({})
     })
 
-    test('when list has only one blog is that blog', () => {
-        const result = favoriteBlog(listWithOneBlog)
+    test('when list has only one blog is the one author with the likes of their singular blog', () => {
+        const result = mostLikes(listWithOneBlog)
         expect(result).toEqual({
-            title: 'Go To Statement Considered Harmful',
             author: 'Edsger W. Dijkstra',
             likes: 5
         })
     })
 
-    test('of a bigger list is the one with the most likes', () => {
-        const result = favoriteBlog(listWithMultipleBlogs)
+    test('of a bigger list is the one with the most likes from all of their blogs', () => {
+        const result = mostLikes(listWithMultipleBlogs)
         expect(result).toEqual({
-            title: "Canonical string reduction",
             author: "Edsger W. Dijkstra",
-            likes: 12
+            likes: 17
         })
     })
 
