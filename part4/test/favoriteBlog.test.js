@@ -1,7 +1,18 @@
-const dummy = (blogs) => {
-    return 1
-}
+const favoriteBlog = require('../utils/list_helper').favoriteBlog
 
+// Favorite: Go To Statement Considered Harmful'
+const listWithOneBlog = [
+    {
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5,
+    __v: 0
+    }
+]
+
+// Favorite: Canonical string reduction
 const listWithMultipleBlogs = [
     {
       _id: "5a422a851b54a676234d17f7",
@@ -53,48 +64,27 @@ const listWithMultipleBlogs = [
     }  
 ]
 
-const totalLikes = (blogs) => {
-    const reducer = (likes, blog) => {
-        return likes + blog.likes
-    }
+describe('favorite blog', () => {
+    test('of an empty list is an empty object', () => {
+        expect(favoriteBlog([])).toEqual({})
+    })
 
-    return blogs.reduce(reducer, 0)
-}
-
-const favoriteBlog = (blogs) => {
-    const reducer = (favorite, blog) => {
-        return (favorite.likes > blog.likes) ? favorite : blog
-    }
-
-    const { _id, __v, url, ...rest } = blogs.reduce(reducer, {})
-
-    return rest
-}
-
-const mostBlogs = (blogs) => {
-    let authorBlogsNum = blogs.reduce((authors, blog) => {
-        authors[blog.author] = (authors[blog.author] || 0) + 1;
-        return authors;
-    }, {})
-
-    let authorBlogs = Object.keys(authorBlogsNum).map(author => 
-        ({
-            "author": author,
-            "blogs": authorBlogsNum[author]
+    test('when list has only one blog is that blog', () => {
+        const result = favoriteBlog(listWithOneBlog)
+        expect(result).toEqual({
+            title: 'Go To Statement Considered Harmful',
+            author: 'Edsger W. Dijkstra',
+            likes: 5
         })
-    )
+    })
 
-    const reducer = (most, author) => {
-        return (most.blogs > author.blogs) ? most : author
-    }
+    test('of a bigger list is the one with the most likes', () => {
+        const result = favoriteBlog(listWithMultipleBlogs)
+        expect(result).toEqual({
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
+            likes: 12
+        })
+    })
 
-    return authorBlogs.reduce(reducer, {})
-}
-
-module.exports = {
-    dummy,
-    totalLikes,
-    favoriteBlog,
-    mostBlogs
-}
-{}["ceo"]
+})
